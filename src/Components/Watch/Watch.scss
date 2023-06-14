@@ -1,0 +1,79 @@
+.watching{
+    margin-top: 56px;
+    & .watch{
+        padding-top: 10px;
+        height: 400px;
+        &__video{
+            height: 100%;
+            width: 100%;
+            border-radius: 10px;
+            &--video{
+                height: 100%;
+                width: 100%;
+                border-radius: 10px;
+            }
+            &--title{
+                font-size: 30px;
+                color: #fff;
+                position: static;
+            }
+        }
+        &__info, &__info2{
+            margin-top: 70px;
+            background-color: #272727;
+            padding: 20px;
+            border-radius: 5px;
+            position: relative;
+            &--view{
+                position: absolute;
+                bottom: 10px;
+                right: 10px;
+                background-color: #272727;
+                color: white;
+                padding: 10px 20px;
+                cursor: pointer;
+                opacity: 70%;
+                &:hover{
+                    opacity: 100%;
+                }
+            }
+            &--image{
+                float: left;
+                max-width: 200px;
+                border-radius: 10px;
+                margin-right: 20px;
+            }
+            &--all{
+                color: #fff;
+                & div{
+                    margin-bottom: 10px;
+                }
+                & .actors{
+                    list-style: none;
+                }
+            }
+        }
+        &__info{
+            height: 330px;
+            overflow: hidden;
+        }
+        &__info2{
+            height: auto;
+        }
+    }
+    & .videos{
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        row-gap: 20px;
+        border-radius: 10px;
+        & .video{
+            width: 100%;
+            height: auto;
+            width: 100%;
+        }
+        &__body{
+            
+        }
+    }
+}

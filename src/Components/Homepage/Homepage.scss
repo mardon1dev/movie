@@ -1,0 +1,49 @@
+.main{
+    margin-top: 56px;
+    & .genres{
+        padding-top: 10px;
+        & .swiper{
+            &-slide{
+                display: block;
+                color: white;
+                padding: 10px 15px;
+                color: #f4ecec;
+                border-radius: 7px;
+            }
+        }
+    }
+}
+.video{
+    width: 100%;
+    position: relative;
+    &__info{
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        opacity: 0;
+        &--title{
+            width: 100%; 
+            font-size: 15px;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: white;
+            margin: 0;
+            padding: 10px;
+            background-color: #0f0f0f;
+            border-radius: 3px;
+        }
+    }
+    &:hover{
+        transform: scale(1.03);
+        transition: .3s ease;
+    }
+    &:hover &__info{
+        opacity: 1;
+        transition: .3s ease;
+    }
+    &:hover &__body{
+        filter: blur(1px);
+        transition: .3s ease;
+    }
+}

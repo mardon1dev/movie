@@ -1,0 +1,101 @@
+.header{
+    position: fixed;
+    top: 0;
+    z-index: 10000;
+    background: #0f0f0f;
+    width: 100%;
+    height: 56px;
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+    & .nav{
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+        &__logo{
+            font-size: 25px;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        &__search{
+            max-width: 600px;
+            width: 100%;
+            height: 40px;
+            position: relative;
+            padding: 0 20px;
+            border-radius: 20px;
+            &--input{
+                width: 100%;
+                outline-color: #a7a7a729;
+                width: 100%;
+                background: 0 0;
+                height: 40px;
+                border: 1px solid;
+                border-color: rgb(255 255 255 / 24%);
+                padding: 0 20px;
+                border-radius: 20px;
+                color: hsla(0,100%,100%,.88);
+            }
+            &--button{
+                position: absolute;
+                right: 22px;
+                height: 36px;
+                cursor: pointer;
+                color: #f1f1f1;
+                padding: 0 25px;
+                margin-top: 2px;
+                border-radius: 0 50px 50px 0;
+                border: none;
+                background: rgba(255,255,255,.1);
+                & svg{
+                    color: white;
+                }
+            }
+        }
+        &__social{
+            display: flex;
+            &--telegram{
+                display: flex;
+                align-items: center;
+                background-color: #08c;
+                height: 35px;
+                line-height: 35px;
+                padding: 0 10px;
+                border-radius: 20px;
+                border-color: rgb(255 255 255 / 24%);
+                color: #f1f1f1;
+                text-decoration: none;
+                transition: .3s ease;
+                &:hover{
+                    color: #08c;
+                    background-color: #f1f1f1;
+                    transition: .3s ease;
+                }
+                & svg{
+                    width: 25px;
+                    height: 25px;
+                }
+                & span{
+                    margin-left: 8px;
+                }
+            }
+            &--button{
+                padding: 0;
+                background-color: transparent;
+                border: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                & svg{
+                    color: white;
+                    width: 25px;
+                    height: 25px;
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+}
