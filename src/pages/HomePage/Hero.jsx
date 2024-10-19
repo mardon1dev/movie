@@ -8,7 +8,7 @@ const Hero = () => {
   return (
     <div className="hero">
       <div className="container">
-        <div className="flex flex-col items-center min-h-screen h-full justify-center">
+        <div className="flex flex-col items-center py-[200px] justify-center">
           <div className="max-w-[880px] mx-auto text-white">
             <h1 className="text-5xl font-semibold text-center leading-[56px]">
               Solaris Synchrony: a Celestial Odyssey of Hope and Harmony

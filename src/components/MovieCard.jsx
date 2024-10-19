@@ -10,7 +10,8 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { IMAGE_URL } from "../hooks/useEnv";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import NoImage from "../assets/images/noimage.jpg";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -37,6 +38,8 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function MovieCard({ movie }) {
+  const navigate = useNavigate();
+
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
@@ -44,21 +47,30 @@ export default function MovieCard({ movie }) {
   };
 
   return (
-    <Card sx={{ maxWidth: 376 }} className="justify-between flex flex-col">
+    <Card sx={{ maxWidth: "100%" }} className="justify-between flex flex-col">
       <div>
-        <Link to={`movie/${movie.id}`}>
-          <CardMedia
-            component="img"
-            className="object-contain w-full"
-            image={`${IMAGE_URL}${movie.poster_path}`}
-            alt={movie.title}
-          />
-        </Link>
+        <CardMedia
+          component="img"
+          className="!object-cover w-full cursor-pointer"
+          image={
+            movie.poster_path ? `${IMAGE_URL}${movie.poster_path}` : NoImage
+          }
+          alt={movie.title}
+          sx={{ height: "300px" }}
+          onClick={() => navigate(`/movie/${movie.id}`)}
+        />
         <CardContent>
-        <Typography variant="h5" sx={{ color: "MenuText", marginBottom: "10px" }}>
+          <Typography
+            variant="h5"
+            sx={{ color: "MenuText", marginBottom: "10px" }}
+          >
             {movie.title}
           </Typography>
-          <Typography variant="body2" sx={{ color: "text.secondary" }} className="line-clamp-3">
+          <Typography
+            variant="body2"
+            sx={{ color: "text.secondary" }}
+            className="line-clamp-3"
+          >
             {movie.overview}
           </Typography>
         </CardContent>
