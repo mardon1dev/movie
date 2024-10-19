@@ -13,7 +13,7 @@ const AllCategory = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`/movie/popular?language=en-US&page=1&api_key=${API_KEY}`)
+      .get(`/movie/now_playing?language=en-US&page=1&api_key=${API_KEY}`)
       .then((res) => {
         setMovies(res.data.results);
         setLoading(false);
