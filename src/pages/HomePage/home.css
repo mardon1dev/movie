@@ -1,0 +1,30 @@
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+      0deg,
+      rgba(16, 16, 16, 0.9),
+      rgba(16, 16, 16, 0.9)
+    ),
+    linear-gradient(180deg, rgba(16, 16, 16, 0) 77.6%, #101010 100%);
+  z-index: -1;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("../../assets//images//hero-img.jpg");
+  background-size: cover;
+  z-index: -2;
+  overflow: hidden;
+}
+
+
+/* Category page */
+
+.category-link{
+    border: 2px solid #606060;
+    background-color: #242323;
+    color: white;
+}
