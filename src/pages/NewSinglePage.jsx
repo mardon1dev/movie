@@ -8,6 +8,7 @@ import { API_KEY, API_URL, IMAGE_URL } from "../hooks/useEnv";
 import Loading from "../components/Loading/Loading";
 import ModalWrapper from "../components/ModalWrapper";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import Loading from "../components/Loading/Loading";
 
 const NewSinglePage = () => {
   const navigate = useNavigate();
@@ -56,6 +57,7 @@ const NewSinglePage = () => {
         );
         if (officialTrailer) {
           setTimeout(() => {
+            setLoading(true);
             setTrailerKey(officialTrailer.key);
           }, 1000);
         }
@@ -198,7 +200,11 @@ const NewSinglePage = () => {
           </Box>
         </Content>
         <ModalWrapper open={open} handleClose={handleClose}>
-          {trailerKey ? (
+          {loading ? (
+            <div>
+              <Loading />
+            </div>
+          ):  (
             <div
               style={{
                 position: "relative",
@@ -224,8 +230,6 @@ const NewSinglePage = () => {
                 title="YouTube Trailer"
               ></iframe>
             </div>
-          ) : (
-            <p>Loading...</p>
           )}
         </ModalWrapper>
       </Container>
@@ -233,6 +237,5 @@ const NewSinglePage = () => {
   );
 };
 
-// https://www.youtube.com/watch?v=XWtKsBGWsig
 
 export default NewSinglePage;
