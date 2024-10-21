@@ -8,7 +8,6 @@ import { API_KEY, API_URL, IMAGE_URL } from "../hooks/useEnv";
 import Loading from "../components/Loading/Loading";
 import ModalWrapper from "../components/ModalWrapper";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import Loading from "../components/Loading/Loading";
 
 const NewSinglePage = () => {
   const navigate = useNavigate();
@@ -16,7 +15,7 @@ const NewSinglePage = () => {
   const { id } = useParams();
 
   const [movie, setMovie] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const [open, setOpen] = useState(false);
@@ -47,6 +46,7 @@ const NewSinglePage = () => {
 
   useEffect(() => {
     const fetchTrailer = async () => {
+      setLoading(true);
       try {
         const response = await useAxios().get(
           `${API_URL}movie/${id}/videos?api_key=${API_KEY}`
@@ -57,8 +57,8 @@ const NewSinglePage = () => {
         );
         if (officialTrailer) {
           setTimeout(() => {
-            setLoading(true);
             setTrailerKey(officialTrailer.key);
+            setLoading(false);
           }, 1000);
         }
       } catch (error) {
@@ -138,6 +138,16 @@ const NewSinglePage = () => {
     );
   }
 
+  if (error) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <Typography color="error">
+          Failed to load movie data. Please try again later.
+        </Typography>
+      </div>
+    );
+  }
+
   return (
     <Background>
       <Overlay />
@@ -200,19 +210,13 @@ const NewSinglePage = () => {
           </Box>
         </Content>
         <ModalWrapper open={open} handleClose={handleClose}>
-          {loading ? (
-            <div>
-              <Loading />
-            </div>
-          ):  (
+          {!trailerKey ? (
             <div
               style={{
                 position: "relative",
-                paddingBottom: "56.25%",
                 height: "100%",
                 overflow: "hidden",
                 maxWidth: "100%",
-                marginTop: "20px",
               }}
             >
               <iframe
@@ -222,7 +226,8 @@ const NewSinglePage = () => {
                   position: "absolute",
                   inset: 0,
                   width: "100%",
-                  height: "70%",
+                  height: "90%",
+                  marginTop:"20px"
                 }}
                 frameBorder="0"
                 loading="lazy"
@@ -230,12 +235,17 @@ const NewSinglePage = () => {
                 title="YouTube Trailer"
               ></iframe>
             </div>
+          ) : (
+            <div className="w-full flex items-center justify-center h-full">
+              <Typography color="error">
+                No trailer available for this movie.
+              </Typography>
+            </div>
           )}
         </ModalWrapper>
       </Container>
     </Background>
   );
 };
-
 
 export default NewSinglePage;

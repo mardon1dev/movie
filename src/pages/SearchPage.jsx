@@ -40,8 +40,6 @@ const SearchPage = () => {
     }
   }, [query]);
 
-  console.log(query);
-
   return (
     <div className="w-full">
       <div className="container">

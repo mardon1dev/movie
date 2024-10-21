@@ -2,7 +2,7 @@ import { ACTIONS } from "./actions";
 
 const initialState = {
   genres: [],
-  query: "",
+  query: JSON.parse(localStorage.getItem("query")) || "",
   category: "now_playing",
   liked: JSON.parse(localStorage.getItem("liked")) || [],
   saved: JSON.parse(localStorage.getItem("saved")) || [],
@@ -18,9 +18,11 @@ export const reducer = (state = initialState, action) => {
         saved: state.saved,
       };
     case ACTIONS.QUERY:
+      const newQuery = action.payload;
+      localStorage.setItem("query", JSON.stringify(newQuery));
       return {
         genres: state.genres,
-        query: action.payload,
+        query: newQuery,
         category: state.category,
         liked: state.liked,
         saved: state.saved,

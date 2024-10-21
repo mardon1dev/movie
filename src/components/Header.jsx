@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../assets/images/logo.svg";
-import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { Button } from "@mui/material";
 
 import SearchIcon from "@mui/icons-material/Search";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ACTIONS } from "../redux/actions";
 
 const Header = () => {
-  const routeCategory = useLocation((state) => state.category);
+  const routeCategory = useSelector((state) => state.category);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -59,7 +57,7 @@ const Header = () => {
     { value: "top_rated", label: "Top Rated" },
   ];
 
-  const [category, setCategory] = useState(movieCategory[0].value);
+  const [category, setCategory] = useState(routeCategory);
 
   const handleChange = (e) => {
     setCategory(e.target.value);
@@ -67,7 +65,7 @@ const Header = () => {
       type: ACTIONS.CATEGORY,
       payload: e.target.value,
     });
-    navigate("/")
+    navigate("/");
   };
 
   return (
@@ -89,8 +87,9 @@ const Header = () => {
           </Link>
           <div className="flex w-full items-center justify-between">
             <FormControl
+              size="small"
               sx={{
-                minWidth: 200,
+                minWidth: "200px",
                 "& .MuiInputLabel-root": {
                   color: "white", // Label color
                 },
@@ -120,13 +119,10 @@ const Header = () => {
                 value={category}
                 onChange={handleChange}
                 autoWidth
+                sx={{ width: "100%" }}
               >
                 {movieCategory.map((category, index) => (
-                  <MenuItem
-                    sx={{ width: "100%" }}
-                    key={index}
-                    value={category.value}
-                  >
+                  <MenuItem key={index} value={category.value}>
                     {category.label}
                   </MenuItem>
                 ))}

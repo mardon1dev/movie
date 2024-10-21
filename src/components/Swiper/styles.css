@@ -30,7 +30,7 @@
 }
 
 .mySwiper2 {
-  height: 80%;
+  height: 100%;
   width: 100%;
 }
 
@@ -44,7 +44,6 @@
 
 .mySwiper .swiper-slide {
   width: 20%;
-  /* height: 250px; */
   height: 100%;
   opacity: 0.4;
   border-radius: 10px;
