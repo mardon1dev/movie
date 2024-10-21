@@ -1,4 +1,4 @@
-.hero::after {
+/* .hero::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -18,7 +18,7 @@
   background-size: cover;
   z-index: -2;
   overflow: hidden;
-}
+} */
 
 
 /* Category page */

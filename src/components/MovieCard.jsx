@@ -7,89 +7,76 @@ import CardActions from "@mui/material/CardActions";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { IMAGE_URL } from "../hooks/useEnv";
 import { useNavigate } from "react-router-dom";
 import NoImage from "../assets/images/noimage.jpg";
-
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme }) => ({
-  marginLeft: "auto",
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
-  variants: [
-    {
-      props: ({ expand }) => !expand,
-      style: {
-        transform: "rotate(0deg)",
-      },
-    },
-    {
-      props: ({ expand }) => !!expand,
-      style: {
-        transform: "rotate(180deg)",
-      },
-    },
-  ],
-}));
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import { useDispatch, useSelector } from "react-redux";
+import { ACTIONS } from "../redux/actions";
 
 export default function MovieCard({ movie }) {
+  const allLikedMovies = useSelector((state) => state.liked);
+  const allSavedMovies = useSelector((state) => state.saved);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const [expanded, setExpanded] = React.useState(false);
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
+  const isLiked = allLikedMovies.some((m) => m.id === movie.id);
+  const isSaved = allSavedMovies.some((m) => m.id === movie.id);
 
   return (
-    <Card sx={{ maxWidth: "100%" }} className="justify-between flex flex-col">
-      <div>
+    <Card
+      sx={{
+        maxWidth: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        backgroundColor: "gray",
+      }}
+    >
+      <div className="w-full">
         <CardMedia
           component="img"
-          className="!object-cover w-full cursor-pointer"
+          className="cursor-pointer !object-cover"
           image={
-            movie.poster_path ? `${IMAGE_URL}${movie.poster_path}` : NoImage
+            movie.backdrop_path ? `${IMAGE_URL}${movie.backdrop_path}` : NoImage
           }
           alt={movie.title}
-          sx={{ height: "300px" }}
+          sx={{ height: 300 }}
           onClick={() => navigate(`/movie/${movie.id}`)}
         />
         <CardContent>
-          <Typography
-            variant="h5"
-            sx={{ color: "MenuText", marginBottom: "10px" }}
-          >
+          <Typography variant="h5" sx={{ color: "MenuText", mb: 1 }}>
             {movie.title}
           </Typography>
           <Typography
             variant="body2"
-            sx={{ color: "text.secondary" }}
+            color="text.secondary"
             className="line-clamp-3"
           >
-            {movie.overview}
+            {movie.overview ? movie.overview : "No info available"}
           </Typography>
         </CardContent>
       </div>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
-        <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
+        <IconButton
+          aria-label="add to liked"
+          onClick={() => {
+            dispatch({ type: ACTIONS.ADD_TO_LIKED, payload: movie });
+          }}
         >
-          <ExpandMoreIcon />
-        </ExpandMore>
+          <FavoriteIcon sx={{ color: `${isLiked ? "red" : "white"}` }} />
+        </IconButton>
+        <IconButton
+          aria-label="add to saved"
+          onClick={() => {
+            dispatch({
+              type: ACTIONS.ADD_TO_WATCHLIST, payload: movie});
+          }}
+        >
+          <BookmarkIcon
+            sx={{ color: `${isSaved ? "green" : "white"}` }}
+          />
+        </IconButton>
       </CardActions>
     </Card>
   );

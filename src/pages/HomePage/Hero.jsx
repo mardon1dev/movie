@@ -1,43 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Swiper from "../../components/Swiper/Swiper";
+import { API_KEY, API_URL } from "../../hooks/useEnv";
+import { useAxios } from "../../hooks/useAxios";
+import { useSelector } from "react-redux";
 
-import { Button } from "@mui/material";
-
-import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import "./home.css";
+import Loading from "../../components/Loading/Loading";
+
 const Hero = () => {
+  const category = useSelector((state) => state.category);
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setLoading(true);
+    useAxios()
+      .get(
+        `${API_URL}movie/${category}?language=en-US&page=1&api_key=${API_KEY}`
+      )
+      .then((res) => {
+        setTimeout(() => {
+          setMovies(res.data.results);
+          setLoading(false);
+        }, 500);
+      })
+      .catch((error) => {
+        setError(error);
+        console.error("Error:", error);
+        setLoading(false);
+      });
+  }, [category]);
   return (
     <div className="hero">
-      <div className="container">
-        <div className="flex flex-col items-center py-[200px] justify-center">
-          <div className="max-w-[880px] mx-auto text-white">
-            <h1 className="text-5xl font-semibold text-center leading-[56px]">
-              Solaris Synchrony: a Celestial Odyssey of Hope and Harmony
-            </h1>
-            <p className="text-lg font-medium leading-6 text-center text-[#878787] mt-6">
-              Against the backdrop of a dying Earth, a group of scientists races
-              to execute a daring plan to synchronize the consciousness of
-              humanity with a new solar system. "Solaris Synchrony" is a
-              gripping.
-            </p>
-            <div className="flex justify-center mt-8 space-x-6">
-              <Button
-                variant="contained"
-                className="h-[56px] !bg-[#F14141] !capitalize !font-semibold flex items-center gap-2"
-              >
-                <span className="m-0">Watch Trailer</span>
-                <PlayCircleIcon />
-              </Button>
-              <Button
-                variant="outlined"
-                className="h-[56px] !capitalize !font-semibold !text-white"
-                color="error"
-              >
-                Sign up
-              </Button>
-            </div>
-          </div>
+      {loading ? (
+        <div className="w-full flex items-center justify-center h-screen">
+          <Loading />
         </div>
-      </div>
+      ) : (
+        <div className="w-full">
+          <Swiper data={movies} />
+        </div>
+      )}
     </div>
   );
 };

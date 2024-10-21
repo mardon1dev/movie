@@ -11,10 +11,9 @@ import Loading from "../../components/Loading/Loading";
 
 const Categories = () => {
   const allgenres = useSelector((state) => state.genres);
+  const category = useSelector((state) => state.category);
 
   const dispatch = useDispatch();
-
-  const axios = useAxios();
 
   const [genres, setGenres] = useState(allgenres);
   const [movies, setMovies] = useState([]);
@@ -37,9 +36,12 @@ const Categories = () => {
           }, 1000);
         } else {
           const res = await useAxios().get(
-            `/movie/now_playing?language=en-US&page=1&api_key=${API_KEY}`
+            `${API_URL}movie/${category}?language=en-US&page=1&api_key=${API_KEY}`
           );
-          setMovies(res.data.results);
+          setTimeout(() => {
+            setLoading(false);
+            setMovies(res.data.results);
+          }, 1000);
         }
       } catch (error) {
         setError(error);
@@ -49,7 +51,7 @@ const Categories = () => {
     };
 
     fetchMovies();
-  }, [selectedGenreId]);
+  }, [selectedGenreId, category]);
 
   useEffect(() => {
     setLoading(true);
@@ -101,23 +103,19 @@ const Categories = () => {
           })}
         </ul>
 
-        {movies.length > 0 ? (
-          <div className="w-full">
-            {loading ? (
-              <div className="w-full py-[30px]">
-                <Loading />
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-8 gap-4">
-                {movies.slice(0, 12).map((movie, index) => (
-                  <MovieCard movie={movie} key={index} />
-                ))}
-              </div>
-            )}
-          </div>
-        ) : (
-          <p></p>
-        )}
+        <div className="w-full">
+          {loading ? (
+            <div className="w-full py-[30px]">
+              <Loading />
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-8 gap-4">
+              {movies.slice(0, 12).map((movie, index) => (
+                <MovieCard movie={movie} key={index} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

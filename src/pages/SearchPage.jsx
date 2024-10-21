@@ -4,33 +4,40 @@ import { API_KEY, API_URL } from "../hooks/useEnv";
 import { useSelector } from "react-redux";
 import Loading from "../components/Loading/Loading";
 import MovieCard from "../components/MovieCard";
+import { useNavigate } from "react-router-dom";
 
 const SearchPage = () => {
   const query = useSelector((state) => state.query);
+  const navigate = useNavigate()
 
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const searchMovies = async (query) => {
-      setMovies([]);
-      setLoading(true);
-      try {
-        const res = await useAxios().get(
-          `${API_URL}search/movie?api_key=${API_KEY}&language=en-US&query=${query}`
-        );
-        setTimeout(() => {
+    if (query.length > 0) {
+      const searchMovies = async (query) => {
+        setMovies([]);
+        setLoading(true);
+        try {
+          const res = await useAxios().get(
+            `${API_URL}search/movie?api_key=${API_KEY}&language=en-US&query=${query}`
+          );
+          setTimeout(() => {
+            setLoading(false);
+            setMovies(res.data.results);
+          }, 1000);
+        } catch (error) {
+          console.error("Error:", error);
+          setError(error.message);
           setLoading(false);
-          setMovies(res.data.results);
-        }, 1000);
-      } catch (error) {
-        console.error("Error:", error);
-        setError(error.message);
-        setLoading(false);
-      }
-    };
-    searchMovies(query);
+        }
+      };
+      searchMovies(query);
+    }
+    else{
+      navigate('/')
+    }
   }, [query]);
 
   console.log(query);
