@@ -38,7 +38,7 @@ const Hero = () => {
           <Loading />
         </div>
       ) : (
-        <div className="w-full">
+        <div className="w-full min-h-screen">
           <Swiper data={movies} />
         </div>
       )}

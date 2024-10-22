@@ -23,7 +23,7 @@ export default function MovieCard({ movie }) {
   const isLiked = allLikedMovies.some((m) => m.id === movie.id);
   const isSaved = allSavedMovies.some((m) => m.id === movie.id);
 
-  return (
+  return (  
     <Card
       sx={{
         maxWidth: "100%",

@@ -6,6 +6,9 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { Button } from "@mui/material";
 
+import { auth, db } from "./auth/Firebase";
+import { doc, getDoc } from "firebase/firestore";
+
 import SearchIcon from "@mui/icons-material/Search";
 import { useDispatch, useSelector } from "react-redux";
 import { ACTIONS } from "../redux/actions";
@@ -18,8 +21,26 @@ const Header = () => {
   const [openSearch, setOpenSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isSinglePage, setIsSinglePage] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [scrolled, setScrolled] = useState(false);
+
+  // User
+  const [profile, setProfile] = useState(null);
+  const handleProfile = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setProfile(docSnap.data());
+      }
+    }
+  };
+
+  useEffect(() => {
+    handleProfile();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -153,17 +174,20 @@ const Header = () => {
                 </Button>
               </form>
               <Button
-                variant="contained"
-                className="h-[56px] !bg-red-700 !capitalize !font-semibold"
-              >
-                Subscribe
-              </Button>
-              <Button
                 variant="outlined"
                 className="h-[56px] !capitalize !font-semibold"
                 color="error"
+                onClick={() => {
+                  profile ? navigate("/profile") : navigate("/login");
+                }}
               >
-                Sign up
+                {profile ? (
+                  <h3 className="text-lg">
+                    <span className="font-bold">{profile.username}</span>
+                  </h3>
+                ) : (
+                  <h3 className="text-lg">Sign Up</h3>
+                )}
               </Button>
             </div>
           </div>
