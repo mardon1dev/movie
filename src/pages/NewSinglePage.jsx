@@ -213,7 +213,7 @@ const NewSinglePage = () => {
           {trailerKey ? (
             <div
               style={{
-                position: "relative",
+                position: "relative", 
                 height: "100%",
                 overflow: "hidden",
                 maxWidth: "100%",
