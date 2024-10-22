@@ -210,7 +210,7 @@ const NewSinglePage = () => {
           </Box>
         </Content>
         <ModalWrapper open={open} handleClose={handleClose}>
-          {!trailerKey ? (
+          {trailerKey ? (
             <div
               style={{
                 position: "relative",
