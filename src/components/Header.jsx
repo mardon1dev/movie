@@ -8,8 +8,12 @@ import { Button } from "@mui/material";
 
 import { auth, db } from "./auth/Firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { onAuthStateChanged } from 'firebase/auth';
 
 import SearchIcon from "@mui/icons-material/Search";
+import LoginIcon from "@mui/icons-material/Login";
+import PersonIcon from "@mui/icons-material/Person";
+
 import { useDispatch, useSelector } from "react-redux";
 import { ACTIONS } from "../redux/actions";
 
@@ -21,25 +25,52 @@ const Header = () => {
   const [openSearch, setOpenSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isSinglePage, setIsSinglePage] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const [scrolled, setScrolled] = useState(false);
 
   // User
   const [profile, setProfile] = useState(null);
-  const handleProfile = async () => {
-    const user = auth.currentUser;
-    if (user) {
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setProfile(docSnap.data());
+  // const handleProfile = async () => {
+  //   const user = auth.currentUser;
+  //   if (user) {
+  //     const docRef = doc(db, "users", user.uid);
+  //     const docSnap = await getDoc(docRef);
+  //     if (docSnap.exists()) {
+  //       setProfile(docSnap.data());
+  //     }
+  //   }
+  // };
+  // useEffect(() => {
+  //   handleProfile();
+  // }, []);
+
+  const handleProfile = async (user) => {
+    try {
+      if (user) {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setProfile(docSnap.data());
+        } else {
+          console.log("No such document!");
+        }
+      } else {
+        console.log("No user is logged in.");
       }
+    } catch (error) {
+      console.error("Error fetching document:", error);
     }
   };
-
+  
   useEffect(() => {
-    handleProfile();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        handleProfile(user); // Pass the user object directly
+      }
+    });
+  
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -181,13 +212,7 @@ const Header = () => {
                   profile ? navigate("/profile") : navigate("/login");
                 }}
               >
-                {profile ? (
-                  <h3 className="text-lg">
-                    <span className="font-bold">{profile.username}</span>
-                  </h3>
-                ) : (
-                  <h3 className="text-lg">Sign Up</h3>
-                )}
+                {profile ? <PersonIcon /> : <LoginIcon />}
               </Button>
             </div>
           </div>

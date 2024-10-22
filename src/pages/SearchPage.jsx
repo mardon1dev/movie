@@ -43,7 +43,7 @@ const SearchPage = () => {
   return (
     <div className="w-full">
       <div className="container">
-        <div className="w-full py-[100px]">
+        <div className="w-full py-[100px] min-h-screen">
           <h2 className="text-lg font-bold mb-4 text-white capitalize">
             Movies searched - {query}
           </h2>

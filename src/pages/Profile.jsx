@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db, storage } from '../components/auth/Firebase';
 import { ref, uploadBytes, getDownloadURL  } from 'firebase/storage';
 import { v4 } from 'uuid';
@@ -17,17 +18,49 @@ const Profile = () => {
   const [about, setAbout] = useState(false);
   const [aboutText, setAboutText] = useState("");
 
-  const handleProfile = async () => {
-    const user = auth.currentUser;
-    if (user) {
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setProfile(docSnap.data());
-        setAboutText(docSnap.data().about || "");
+  // const handleProfile = async () => {
+  //   const user = auth.currentUser;
+  //   if (user) {
+  //     const docRef = doc(db, "users", user.uid);
+  //     const docSnap = await getDoc(docRef);
+  //     if (docSnap.exists()) {
+  //       setProfile(docSnap.data());
+  //       setAboutText(docSnap.data().about || "");
+  //     }
+  //   }
+  // };
+  // useEffect(() => {
+  //   handleProfile();
+  // }, []);
+
+  const handleProfile = async (user) => {
+    try {
+      if (user) {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setProfile(docSnap.data());
+        } else {
+          console.log("No such document!");
+        }
+      } else {
+        console.log("No user is logged in.");
       }
+    } catch (error) {
+      console.error("Error fetching document:", error);
     }
   };
+  
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        handleProfile(user); // Pass the user object directly
+      }
+    });
+  
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
   
   const [selectedImage, setSelectedImage] = useState(null)
   const handleImageChange = async (e) => {
@@ -48,11 +81,8 @@ const Profile = () => {
         });
     }
   };
-  
 
-  useEffect(()=>{
-    handleProfile();
-  }, [])
+  console.log(profile);
 
   useEffect(() => {
     if (profile?.photoURL) {
@@ -125,8 +155,8 @@ const Profile = () => {
                   </label>
                 </div>
                 <div className='mt-4'>
-                  <h3 className='text-lg'>Name: <span className='font-bold'>{profile.username}</span></h3>
-                  <h3 className='text-lg'>Email: <span className='font-bold text-sm'>{profile.email}</span></h3>
+                  <h3 className='text-lg'>Name: <span className='font-bold'>{profile?.username}</span></h3>
+                  <h3 className='text-lg'>Email: <span className='font-bold text-sm'>{profile?.email}</span></h3>
                 </div>
               </div>
               <div className="col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-5 md:row-span-4 bg-gray-300 p-4 rounded-md min-h-[200px] h-full">
