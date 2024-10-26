@@ -8,6 +8,7 @@ import "./home.css";
 import { useDispatch, useSelector } from "react-redux";
 import { ACTIONS } from "../../redux/actions";
 import Loading from "../../components/Loading/Loading";
+import { Pagination } from "@mui/material";
 
 const Categories = () => {
   const allgenres = useSelector((state) => state.genres);
@@ -21,6 +22,9 @@ const Categories = () => {
   const [loading, setLoading] = useState(false);
   const [selectedGenreId, setSelectedGenreId] = useState(null);
   const [error, setError] = useState(null);
+
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     setLoading(true);
@@ -36,11 +40,12 @@ const Categories = () => {
           }, 1000);
         } else {
           const res = await useAxios().get(
-            `${API_URL}movie/${category}?language=en-US&page=1&api_key=${API_KEY}`
+            `${API_URL}movie/${category}?language=en-US&page=${page}&api_key=${API_KEY}`
           );
           setTimeout(() => {
             setLoading(false);
             setMovies(res.data.results);
+            setTotal(res.data.total_pages);
           }, 1000);
         }
       } catch (error) {
@@ -51,7 +56,7 @@ const Categories = () => {
     };
 
     fetchMovies();
-  }, [selectedGenreId, category]);
+  }, [selectedGenreId, category, page]);
 
   useEffect(() => {
     setLoading(true);
@@ -109,10 +114,20 @@ const Categories = () => {
               <Loading />
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-8 gap-4">
-              {movies.slice(0, 12).map((movie, index) => (
-                <MovieCard movie={movie} key={index} />
-              ))}
+            <div>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-8 gap-4">
+                {movies.slice(0, 12).map((movie, index) => (
+                  <MovieCard movie={movie} key={index} />
+                ))}
+              </div>
+              <div className="w-full flex justify-center items-center py-4 mt-4 bg-[#fff]/10 rounded">
+                <Pagination
+                  onChange={(a, b) => setPage(b)}
+                  page={page}
+                  count={total}
+                  color="primary"
+                />
+              </div>
             </div>
           )}
         </div>

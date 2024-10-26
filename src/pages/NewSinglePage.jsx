@@ -8,6 +8,7 @@ import { API_KEY, API_URL, IMAGE_URL } from "../hooks/useEnv";
 import Loading from "../components/Loading/Loading";
 import ModalWrapper from "../components/ModalWrapper";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import YouTube from "react-youtube";
 
 const NewSinglePage = () => {
   const navigate = useNavigate();
@@ -18,11 +19,13 @@ const NewSinglePage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
+
+  const [youtubeVideos, setYoutubeVideos] = useState([]);
 
   useEffect(() => {
     setLoading(true);
@@ -40,34 +43,44 @@ const NewSinglePage = () => {
       });
   }, [id]);
 
+  useEffect(()=>{
+    useAxios().get(`${API_URL}movie/${id}/videos?language=en-US`).
+    then((res)=>{
+      setYoutubeVideos(res.data.results)
+    })
+    .catch((err)=>{
+      setError(err)
+    })
+  }, [id])
+
   // Display movie trailer
 
-  const [trailerKey, setTrailerKey] = useState(null);
+  // const [trailerKey, setTrailerKey] = useState(null);
 
-  useEffect(() => {
-    const fetchTrailer = async () => {
-      setLoading(true);
-      try {
-        const response = await useAxios().get(
-          `${API_URL}movie/${id}/videos?api_key=${API_KEY}`
-        );
-        const trailers = response.data.results;
-        const officialTrailer = trailers.find(
-          (trailer) => trailer.type === "Trailer" && trailer.site === "YouTube"
-        );
-        if (officialTrailer) {
-          setTimeout(() => {
-            setTrailerKey(officialTrailer.key);
-            setLoading(false);
-          }, 1000);
-        }
-      } catch (error) {
-        console.error("Error fetching trailer:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchTrailer = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const response = await useAxios().get(
+  //         `${API_URL}movie/${id}/videos?api_key=${API_KEY}`
+  //       );
+  //       const trailers = response.data.results;
+  //       const officialTrailer = trailers.find(
+  //         (trailer) => trailer.type === "Trailer" && trailer.site === "YouTube"
+  //       );
+  //       if (officialTrailer) {
+  //         setTimeout(() => {
+  //           setTrailerKey(officialTrailer.key);
+  //           setLoading(false);
+  //         }, 1000);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching trailer:", error);
+  //     }
+  //   };
 
-    fetchTrailer();
-  }, [id]);
+  //   fetchTrailer();
+  // }, [id]);
 
   const Background = styled("div")({
     backgroundImage: `url(${
@@ -97,7 +110,7 @@ const NewSinglePage = () => {
   const Content = styled(Box)({
     position: "relative",
     zIndex: 2,
-    maxWidth: "800px",
+    maxWidth: "1200px",
     padding: "20px",
     textAlign: "left",
   });
@@ -208,8 +221,16 @@ const NewSinglePage = () => {
               </IMDbLink>
             )}
           </Box>
+          <Typography className="!mt-5">
+            Vidoes about {movie.title}
+          </Typography>
+          <div className="w-full flex items-center justify-between flex-wrap mt-5 gap-5">
+            {
+              youtubeVideos?.slice(0,6).map((item, index) => <YouTube className="w-[32%]" videoId={item.key} id={item.id} key={index} /> )
+            }
+          </div>
         </Content>
-        <ModalWrapper open={open} handleClose={handleClose}>
+        {/* <ModalWrapper open={open} handleClose={handleClose}>
           {trailerKey ? (
             <div
               style={{
@@ -242,7 +263,7 @@ const NewSinglePage = () => {
               </Typography>
             </div>
           )}
-        </ModalWrapper>
+        </ModalWrapper> */}
       </Container>
     </Background>
   );
